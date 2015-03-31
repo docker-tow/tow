@@ -16,7 +16,7 @@ setup(
     url='https://github.com/alekseiko/tow',
     packages=find_packages(),
     test_suite='nose.collector',
-    tests_require=['nose', 'fudge'],
+    tests_require=['nose'],
     install_requires=['jinja2'],
     entry_points={
         'console_scripts': [

@@ -100,20 +100,17 @@ class Dockerfile(object):
             elif dockerfile_line.startswith("ENTRYPOINT"):
                 entrypoint = dockerfile_line
 
-        result = ""
-        for exec_line in [entrypoint, cmd]:
-            if exec_line:
-                result = result + self._parse_exec_line(exec_line)
+        result = " ".join([self._parse_exec_line(exec_line) for exec_line in [entrypoint, cmd] if exec_line])
 
         return result if result else None
 
-    def replace_entrypoint_or_cmd_by_tow(self, cmd):
+    def replace_entrypoint_or_cmd_by_tow_cmd(self, cmd):
         self.__dockerfile = [dockerfile_line for dockerfile_line in self.__dockerfile
                              if dockerfile_line.startswith("CMD") or dockerfile_line.startswith("ENTRYPOINT")]
 
         position = len(self.__dockerfile)
         for i, dockerfile_line in enumerate(self.__dockerfile):
-            if dockerfile_line.startswith("CMD"):
+            if dockerfile_line.startswith("EXPOSE"):
                 position = i
                 break
         self.__dockerfile = self.__dockerfile[:position] + cmd + self.__dockerfile[position:]
