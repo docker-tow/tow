@@ -18,6 +18,9 @@ setup(
     test_suite='nose.collector',
     tests_require=['nose'],
     install_requires=['jinja2'],
+    package_data = {
+        '': ['*.tmpl'],
+    },
     entry_points={
         'console_scripts': [
             'tow = tow.main:main',

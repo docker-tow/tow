@@ -2,6 +2,7 @@
 TODO: add comments
 """
 import re
+import os
 
 
 class Dockerfile(object):
@@ -14,7 +15,7 @@ class Dockerfile(object):
     def _parse_dockerfile(self):
         if not self.__dockerfile:
             with open(self.__dockerfile_path, "r") as df:
-                self.__dockerfile = df.readlines()
+                self.__dockerfile = [line.strip() for line in df.readlines()]
 
     def _parse_spaced_envs(self, env_line):
         envs = env_line.split(" ")
@@ -48,12 +49,14 @@ class Dockerfile(object):
         return (result, is_multiline_envs)
 
     def _parse_exec_line(self, exec_line):
-        command = exec_line[exec_line.find(" ") + 1:]
-        if command.startswith("[") and command.endswith("]"):  # Handle array command
-            command = command[1:-1]
-            return " ".join([sh.strip()[1:-1] for sh in command.split(",")])
-        else:  # It's just shell notation
-            return command.strip()
+        if exec_line:
+            command = exec_line[exec_line.find(" ") + 1:]
+            if command.startswith("[") and command.endswith("]"):  # Handle array command
+                command = command[1:-1]
+                return " ".join([sh.strip()[1:-1] for sh in command.split(",")])
+            else:  # It's just shell notation
+                return command.strip()
+        return None
 
     def envs(self):
         if not self.__envs:
@@ -77,8 +80,8 @@ class Dockerfile(object):
                 self.__envs.update(env_vars)
         return self.__envs
 
-    def add_copy(self, mapping):
-        copy_block = ["COPY %s %s" % (src, dst) for (src, dst) in mapping]
+    def add_copy(self, file_mapping):
+        copy_block = ["COPY %s %s" % (src, dst) for (src, dst) in file_mapping]
         position = len(self.__dockerfile)
 
         for i, dockerfile_line in enumerate(self.__dockerfile):
@@ -99,21 +102,19 @@ class Dockerfile(object):
                 cmd = dockerfile_line
             elif dockerfile_line.startswith("ENTRYPOINT"):
                 entrypoint = dockerfile_line
-
-        result = " ".join([self._parse_exec_line(exec_line) for exec_line in [entrypoint, cmd] if exec_line])
-
-        return result if result else None
+        return (self._parse_exec_line(entrypoint), self._parse_exec_line(cmd))
 
     def replace_entrypoint_or_cmd_by_tow_cmd(self, cmd):
         self.__dockerfile = [dockerfile_line for dockerfile_line in self.__dockerfile
-                             if dockerfile_line.startswith("CMD") or dockerfile_line.startswith("ENTRYPOINT")]
+                             if not dockerfile_line.startswith("CMD") and not dockerfile_line.startswith("ENTRYPOINT")]
 
         position = len(self.__dockerfile)
         for i, dockerfile_line in enumerate(self.__dockerfile):
             if dockerfile_line.startswith("EXPOSE"):
                 position = i
                 break
-        self.__dockerfile = self.__dockerfile[:position] + cmd + self.__dockerfile[position:]
+        self.__dockerfile = self.__dockerfile[:position] +\
+                            ["ENTRYPOINT %s" % cmd] + self.__dockerfile[position:]
 
     def save(self, dockerfile_path):
         with open(dockerfile_path, "w+") as df:

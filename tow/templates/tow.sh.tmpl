@@ -1,0 +1,23 @@
+#!/bin/sh
+# This is tow run script which copy files from tow volume
+
+if [ -d "{{volume_name}}" ]; then
+    {% for (src, dst) in mapping %}
+    if [ -f "{{volume_name}}/{{src}}" ]; then
+        dst_dir=`dirname {{dst}}`
+        if [ ! -d "$dst_dir" ]; then
+            mkdir -p "$dst_dir"
+        fi
+        cp "{{volume_name}}/{{src}}" "{{dst}}"
+    fi
+    {% endfor %} 
+fi
+
+{% if entrypoint %}
+command={{entrypoint}} {{cmd}} $*
+{% else %}
+command={{cmd}}
+{% endif %}
+
+# execute entire command
+$command
