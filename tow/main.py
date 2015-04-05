@@ -16,37 +16,14 @@ import shutil
 from dockerfile import Dockerfile
 from attrs import process_attrs
 from modules import load_module
+from utils import prepare_workingdir
+from utils import copy_files
+from utils import get_env_args
+from utils import TOW_VOLUME
+from utils import project_paths
 
 
-TOW_VOLUME = "/tow"
-
-def project_paths():
-    current_dir = os.getcwd()
-    return (current_dir,
-            os.path.join(current_dir, "Dockerfile"),
-            os.path.join(current_dir, "mapping.py"),
-            os.path.join(current_dir, "templates"),
-            os.path.join(current_dir, "files"),
-            os.path.join(current_dir, "attributes"))
-
-
-def prepare_workingdir(workingdir):
-    if os.path.exists(workingdir):
-        shutil.rmtree(workingdir, ignore_errors=True)
-    os.mkdir(workingdir)
-
-
-def copy_files(workingdir, files_path):
-    for f in os.listdir(files_path):
-        src_path = os.path.join(files_path, f)
-        dst_path = os.path.join(workingdir, f)
-        if os.path.isfile(src_path):
-            shutil.copy2(src_path, dst_path)
-        else:
-            shutil.copytree(src_path, dst_path)
-
-
-def init_tow():
+def init_tow(env_args={}):
     (current_dir, dockerfile_path,
      mappingfile_path, templates_path,
      files_path, attributes_path) = project_paths()
@@ -60,6 +37,8 @@ def init_tow():
     dockerfile = Dockerfile(dockerfile_path)
 
     envs = dockerfile.envs()
+    # envs passed as params has more priority then Dockerfile envs
+    envs.update(env_args)
     attrs = process_attrs(envs, attributes_path)
 
     # process templates
@@ -73,9 +52,7 @@ def init_tow():
                     shutil.rmtree(template_path_dir, ignore_errors=True)
 
                 os.mkdirs(template_path_dir)
-            templates.process(os.path.dirname(src_template_path),
-                                os.path.basename(src_template_path),
-                                processed_template_path, attrs)
+            templates.process(os.path.dirname(src_template_path), os.path.basename(src_template_path), processed_template_path, attrs)
 
     copy_files(workingdir, files_path)
 
@@ -86,7 +63,8 @@ def init_tow():
 
 
 def run_docker(args):
-    (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow()
+    env_args = get_env_args(args)
+    (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(env_args)
 
     build_args = " ".join(args[1:])
     build_cmd = "docker run %s %s" % ("-v .tow:/tow", build_args)
@@ -97,7 +75,6 @@ def run_docker(args):
             print "ERORR: Please install docker and run tow again"
 
 
-
 def build_docker(args):
     (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow()
 
@@ -106,9 +83,9 @@ def build_docker(args):
         (entrypoint, cmd) = dockerfile.find_entrypoint_or_cmd()
         templates.process_template("tow.sh.tmpl",
                                    os.path.join(workingdir, "tow.sh"),
-                                   {"entrypoint" : entrypoint,
-                                    "cmd" : cmd, "mapping" : file_mapping,
-                                    "volume_name" : TOW_VOLUME})
+                                   {"entrypoint": entrypoint,
+                                    "cmd": cmd, "mapping": file_mapping,
+                                    "volume_name": TOW_VOLUME})
         file_mapping.append(("tow.sh", "/tow.sh"))
         dockerfile.replace_entrypoint_or_cmd_by_tow_cmd("sh /tow.sh")
 
@@ -119,7 +96,7 @@ def build_docker(args):
     build_args = " ".join([arg for arg in args[1:] if arg != "--tow-run"])
     build_cmd = "docker build %s %s" % (build_args, workingdir)
     try:
-        subprocess.call([cmd for cmd in build_cmd.split(" ") if cmd])
+        subprocess.call([command for command in build_cmd.split(" ") if command])
     except OSError as e:
         if e.errno == os.errno.ENOENT:
             print "ERORR: Please install docker and run tow again"
