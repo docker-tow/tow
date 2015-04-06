@@ -67,7 +67,7 @@ def run_docker(args):
     (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(env_args)
 
     build_args = " ".join(args[1:])
-    build_cmd = "docker run %s %s" % ("-v .tow:/tow", build_args)
+    build_cmd = "docker run %s %s" % ("-v %s:/tow" % workingdir, build_args)
     try:
         subprocess.call([cmd for cmd in build_cmd.split(" ") if cmd])
     except OSError as e:
