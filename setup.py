@@ -8,7 +8,7 @@ long_description = 'For more information see https://github.com/alekseiko/tow'
 
 setup(
     name='tow',
-    version='0.0.1',
+    version='1.0.0-alpha',
     description='Tow is tool for automatization docker configuration managment workflow',
     long_description=long_description,
     author='Aleksei Kornev, Nikolay Yurin',
@@ -18,7 +18,7 @@ setup(
     test_suite='nose.collector',
     tests_require=['nose'],
     install_requires=['jinja2'],
-    package_data = {
+    package_data={
         '': ['*.tmpl'],
     },
     entry_points={
