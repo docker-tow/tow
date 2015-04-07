@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/alekseiko/tow.svg)](https://travis-ci.org/alekseiko/tow)
 # tow
 Workflow for docker configuration management 
 
