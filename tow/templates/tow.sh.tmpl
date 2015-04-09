@@ -14,9 +14,9 @@ if [ -d "{{volume_name}}" ]; then
 fi
 
 {% if entrypoint %}
-command={{entrypoint}} {{cmd}} $*
+command="{{entrypoint}} {{cmd}} $*"
 {% else %}
-command={{cmd}}
+command="{{cmd}}"
 {% endif %}
 
 # execute entire command
