@@ -10,7 +10,7 @@ if [ -d "{{volume_name}}" ]; then
         fi
         cp "{{volume_name}}/{{src}}" "{{dst}}"
     fi
-    {% endfor %} 
+    {% endfor %}
 fi
 
 {% if entrypoint %}
@@ -20,4 +20,4 @@ command="{{cmd}}"
 {% endif %}
 
 # execute entire command
-$command
+"$command"
