@@ -63,6 +63,12 @@ def init_tow(env_args={}):
 
 
 def run_docker(args):
+    if "--tow-help" in args:
+        print "Usage: tow run [TOW-OPTIONS] [DOCKER-OPTIONS]"
+        print "Run docker container. If you built it with --tow-run option all you new configurations will be applied to instance"
+        print "All docker run agruments will be passed to docker run command"
+        return
+
     env_args = get_env_args(args)
     (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(env_args)
 
@@ -76,8 +82,14 @@ def run_docker(args):
 
 
 def build_docker(args):
-    (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow()
+    if "--tow-help" in args:
+        print "Usage: tow build <name of project> [TOW-OPTIONS] [DOCKER-OPTIONS]"
+        print "Build command use for building docker container with processed configs and files by tow"
+        print "All docker build agruments will be passed to docker buld command"
+        print "\t--tow-run - patch docker file in order to use configuration in run phase"
+        return
 
+    (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow()
     #  Check if you would like to patch Dockerfile in order to use reconfiguration on run phase
     if "--tow-run" in args:
         (entrypoint, cmd) = dockerfile.find_entrypoint_or_cmd()
@@ -129,7 +141,7 @@ def usage():
                 else process attributes and tempaltes mount /tow volume and
                 run docker run with DOCKER-OPTIONS"""
     print """TOW-OPTIONS - every tow command has it own options for more
-            information run tow COMMAND --help"""
+            information run tow COMMAND --tow-help"""
     print """DOCKER-OPTIONS - options for docker buid or run command"""
 
 
