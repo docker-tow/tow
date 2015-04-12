@@ -116,6 +116,23 @@ def create_project(args):
                                    os.path.join(project_name, file_name), {})
 
 
+def usage():
+    """
+        Print out how to use tow
+    """
+    print "tow is configuration managment tool for docker containers"
+    print "Usage: tow COMMAND [TOW-OPTIONS] [DOCKER-OPTIONS]"
+    print "Commands:"
+    print """\tbuild - process attributes and tamplates path Dockerfile
+            according mapping and run docker build with DOCKER-OPTIONS"""
+    print """\trun - if tow build was without --tow-run option than call docker run
+                else process attributes and tempaltes mount /tow volume and
+                run docker run with DOCKER-OPTIONS"""
+    print """TOW-OPTIONS - every tow command has it own options for more
+            information run tow COMMAND --help"""
+    print """DOCKER-OPTIONS - options for docker buid or run command"""
+
+
 def main():
     """
     Main command-line execution loop
@@ -130,6 +147,5 @@ def main():
         elif action == "run":
             run_docker(args)
     else:
-        # TODO: show usage
-        pass
+        usage()
     sys.exit(0)

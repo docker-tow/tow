@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/alekseiko/tow.svg)](https://travis-ci.org/alekseiko/tow)
 [![Coverage Status](https://coveralls.io/repos/alekseiko/tow/badge.svg)](https://coveralls.io/r/alekseiko/tow)
+[![Code Climate](https://codeclimate.com/github/alekseiko/tow/badges/gpa.svg)](https://codeclimate.com/github/alekseiko/tow)                
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alekseiko/tow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Tow - configuration management tool for Docker

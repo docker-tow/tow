@@ -3,7 +3,11 @@
 from __future__ import with_statement
 from setuptools import setup, find_packages
 
-long_description = 'For more information see https://github.com/alekseiko/tow'
+long_description = """Tow provides a workflow for building docker images
+                        with dynamics configuration files using templates.
+                        The main concept is processing all configuration
+                        templates outside of container and then build
+                        image using pre-processed files."""
 
 
 setup(
