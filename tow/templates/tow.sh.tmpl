@@ -19,5 +19,7 @@ command="{{entrypoint}} {{cmd}} $*"
 command="{{cmd}}"
 {% endif %}
 
+PATH=$PATH:`pwd`
+
 # execute entire command
 "$command"
