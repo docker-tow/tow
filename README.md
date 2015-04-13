@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/alekseiko/tow.png?label=ready&title=Ready)](https://waffle.io/alekseiko/tow)
 [![Build Status](https://travis-ci.org/alekseiko/tow.svg)](https://travis-ci.org/alekseiko/tow)
 [![Coverage Status](https://coveralls.io/repos/alekseiko/tow/badge.svg)](https://coveralls.io/r/alekseiko/tow)
 [![Code Climate](https://codeclimate.com/github/alekseiko/tow/badges/gpa.svg)](https://codeclimate.com/github/alekseiko/tow)                
