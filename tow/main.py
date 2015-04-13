@@ -21,6 +21,7 @@ from utils import copy_files
 from utils import get_env_args
 from utils import TOW_VOLUME
 from utils import project_paths
+from datetime import date
 
 
 def init_tow(env_args={}):
@@ -118,7 +119,7 @@ def create_project(args):
     """
     Generate tow project structure
     """
-    if "--tow-help" in args:
+    if "--help" in args or len(args) == 1:
         print "Usage: tow create <project-name>"
         print "Create tow project in current folder"
         return
@@ -127,9 +128,11 @@ def create_project(args):
     project_name = args[1]
     for dir_name in ["attributes", "files", "templates"]:
         os.makedirs(os.path.join(project_name, dir_name))
-    for file_name in ["Dockerfile", "mapping.py"]:
-        templates.process_template("%s.tmpl" % file_name,
-                                   os.path.join(project_name, file_name), {})
+    for file_name in ["Dockerfile", "mapping.py", "attributes/default.py"]:
+        templates.process_template("%s.tmpl" % os.path.basename(file_name),
+                                   os.path.join(project_name, file_name),
+                                   {"current_year": date.today().year,
+                                    "project_name": project_name})
 
 
 def usage():
