@@ -53,7 +53,9 @@ def init_tow(env_args={}):
                     shutil.rmtree(template_path_dir, ignore_errors=True)
 
                 os.mkdirs(template_path_dir)
-            templates.process(os.path.dirname(src_template_path), os.path.basename(src_template_path), processed_template_path, attrs)
+            templates.process(os.path.dirname(src_template_path),
+                              os.path.basename(src_template_path),
+                              processed_template_path, attrs)
 
     copy_files(workingdir, files_path)
 
@@ -66,7 +68,8 @@ def init_tow(env_args={}):
 def run_docker(args):
     if "--tow-help" in args:
         print "Usage: tow run [TOW-OPTIONS] [DOCKER-OPTIONS]"
-        print "Run docker container. If you built it with --tow-run option all you new configurations will be applied to instance"
+        print "Run docker container. If you built it with --tow-run option all \
+                you new configurations will be applied to instance"
         print "All docker run agruments will be passed to docker run command"
         return
 
@@ -84,14 +87,18 @@ def run_docker(args):
 
 def build_docker(args):
     if "--tow-help" in args:
-        print "Usage: tow build <name of project> [TOW-OPTIONS] [DOCKER-OPTIONS]"
-        print "Build command use for building docker container with processed configs and files by tow"
+        print "Usage: tow build <name of project> [TOW-OPTIONS] \
+                [DOCKER-OPTIONS]"
+        print "Build command use for building docker container with processed \
+                configs and files by tow"
         print "All docker build agruments will be passed to docker buld command"
-        print "\t--tow-run - patch docker file in order to use configuration in run phase"
+        print "\t--tow-run - patch docker file in order to use configuration in\
+                run phase"
         return
 
     (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow()
-    #  Check if you would like to patch Dockerfile in order to use reconfiguration on run phase
+    #  Check if you would like to patch Dockerfile in order to use
+    #  reconfiguration on run phase
     if "--tow-run" in args:
         (entrypoint, cmd) = dockerfile.find_entrypoint_or_cmd()
         templates.process_template("tow.sh.tmpl",
@@ -109,7 +116,8 @@ def build_docker(args):
     build_args = " ".join([arg for arg in args[1:] if arg != "--tow-run"])
     build_cmd = "docker build %s %s" % (build_args, workingdir)
     try:
-        subprocess.call([command for command in build_cmd.split(" ") if command])
+        subprocess.call(
+            [command for command in build_cmd.split(" ") if command])
     except OSError as e:
         if e.errno == os.errno.ENOENT:
             print "ERORR: Please install docker and run tow again"
@@ -145,8 +153,8 @@ def usage():
     print """\tcreate - create tow project in current directory"""
     print """\tbuild - process attributes and tamplates path Dockerfile
             according mapping and run docker build with DOCKER-OPTIONS"""
-    print """\trun - if tow build was without --tow-run option than call docker run
-                else process attributes and tempaltes mount /tow volume and
+    print """\trun - if tow build was without --tow-run option than call docker
+                run else process attributes and tempaltes mount /tow volume and
                 run docker run with DOCKER-OPTIONS"""
     print """TOW-OPTIONS - every tow command has it own options for more
             information run tow COMMAND --tow-help"""
