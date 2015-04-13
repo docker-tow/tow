@@ -118,6 +118,10 @@ def create_project(args):
     """
     Generate tow project structure
     """
+    if "--tow-help" in args:
+        print "Usage: tow create <project-name>"
+        print "Create tow project in current folder"
+        return
     if len(args) < 2:
         raise "Specify project name"
     project_name = args[1]
@@ -135,6 +139,7 @@ def usage():
     print "tow is configuration managment tool for docker containers"
     print "Usage: tow COMMAND [TOW-OPTIONS] [DOCKER-OPTIONS]"
     print "Commands:"
+    print """\tcreate - create tow project in current directory"""
     print """\tbuild - process attributes and tamplates path Dockerfile
             according mapping and run docker build with DOCKER-OPTIONS"""
     print """\trun - if tow build was without --tow-run option than call docker run
