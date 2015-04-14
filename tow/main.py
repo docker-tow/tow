@@ -73,10 +73,10 @@ def run_docker(args):
     env_args = get_env_args(args)
     (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(env_args)
 
-    build_args = " ".join(args[1:])
-    build_cmd = "docker run %s %s" % ("-v %s:/tow" % workingdir, build_args)
+    build_cmd = ("docker run %s" % ("-v %s:/tow" % workingdir)).split(" ")
+    build_cmd.extend(args[1:])
     try:
-        subprocess.call([cmd for cmd in build_cmd.split(" ") if cmd])
+        subprocess.call(build_cmd)
     except OSError as e:
         if e.errno == os.errno.ENOENT:
             print "ERORR: Please install docker and run tow again"
