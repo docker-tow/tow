@@ -13,7 +13,7 @@ Tow provides a workflow for building docker images with dynamics configuration f
 
 Here how it works:
 
-![Tow process diagram](tow-process.png)
+![Tow process diagram](docs/images/tow-process.png)
 
 ## Installation
 
