@@ -13,7 +13,7 @@ Tow provides a workflow for building docker images with dynamics configuration f
 
 Here how it works:
 
-![Tow process diagram](tow-process.png)
+![Tow process diagram](docs/images/tow-process.png)
 
 ## Installation
 
@@ -23,10 +23,16 @@ Latest stable release is always available on PyPi.
 pip install tow
 ```
 
+## Getting Started
+
+Check out [Getting Started Guide](docs/introduction.md) to get more familiar with Tow.
+
+If you are looking real world example of Tow project checkout: [tow-nginx](https://github.com/yurinnick/tow-nginx) - an example Tow project set up Nginx in most simple configuration.
+
 ## Usage
 
 ```
-Usage: tow [command] <options>
+tow [command] <options>
 
 Commands:
     create <projectname> - create new tow project in current directory
@@ -40,10 +46,6 @@ Tow also provide a docker image for working on distros like [CoreOS](https://cor
 ```
 $ docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace tow <parameters>
 ```
-
-## Example
-
-Checkout [tow-nginx](https://github.com/yurinnick/tow-nginx) - the real world example of using tow.
 
 ## License
 
