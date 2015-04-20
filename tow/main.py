@@ -43,7 +43,9 @@ def init_tow(env_args={}):
     attrs = process_attrs(envs, attributes_path)
 
     # process templates
-    for (src, dst) in file_mapping.mapping:
+    for fm in file_mapping.mapping:
+        src = fm[0]
+        dst = fm[1]
         src_template_path = os.path.join(templates_path, src)
         if os.path.exists(src_template_path):
             processed_template_path = os.path.join(workingdir, src)
@@ -59,8 +61,8 @@ def init_tow(env_args={}):
 
     copy_files(workingdir, files_path)
 
-    handled_file_mapping = [(src, dst) for (src, dst) in file_mapping.mapping
-                            if os.path.exists(os.path.join(workingdir, src))]
+    handled_file_mapping = [fm for fm in file_mapping.mapping
+                            if os.path.exists(os.path.join(workingdir, fm[0]))]
 
     return (handled_file_mapping, dockerfile, envs, attrs, workingdir)
 
@@ -109,8 +111,7 @@ def build_docker(args):
         file_mapping.append(("tow.sh", "/tow.sh"))
         dockerfile.replace_entrypoint_or_cmd_by_tow_cmd("sh /tow.sh")
 
-    dockerfile.add_copy([(src, dst) for (src, dst) in file_mapping
-                         if os.path.exists(os.path.join(workingdir, src))])
+    dockerfile.add_copy(file_mapping)
     dockerfile.save(os.path.join(workingdir, "Dockerfile"))
 
     build_args = " ".join([arg for arg in args[1:] if arg != "--tow-run"])

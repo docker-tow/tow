@@ -90,17 +90,28 @@ class Dockerfile(object):
         return self.__envs
 
     def add_copy(self, file_mapping):
-        copy_block = ["COPY %s %s" % (src, dst) for (src, dst) in file_mapping]
+        copy_block = []
+        for fm in file_mapping:
+            src = fm[0]
+            dst = fm[1]
+            mask = fm[2] if len(fm) > 2 else None
+            copy_block.append("COPY %s %s" % (src, dst))
+            if mask:
+                copy_block.append("RUN chmod %s %s" % (mask, dst))
+
+        if copy_block:
+            copy_block = ["# TOW COPY BLOCK FROM MAPPING FILE START"] +\
+                copy_block +\
+                ["# TOW COPY BLOCK FROM MAPPING FILE END"]
+
         position = len(self.__dockerfile)
 
         for i, dockerfile_line in enumerate(self.__dockerfile):
-            if (dockerfile_line.startswith("CMD") or
-                    dockerfile_line.startswith("ENTRYPOINT")):
+            if dockerfile_line.startswith("FROM") or dockerfile_line.startswith("MAINTAINER"):
                 position = i
-                break
 
-        self.__dockerfile = self.__dockerfile[:position] + \
-            copy_block + self.__dockerfile[position:]
+        position = position + 1 if position + 1 < len(self.__dockerfile) else position
+        self.__dockerfile = self.__dockerfile[:position] + copy_block + self.__dockerfile[position:]
 
     def find_entrypoint_or_cmd(self):
         """ This command find entrypoint or cmd blocks and
