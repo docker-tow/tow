@@ -78,6 +78,12 @@ def run_docker(args):
     env_args = get_env_args(args)
     (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(env_args)
 
+    # Init mapping file
+    templates.process_template("mapping.sh.tmpl",
+                                os.path.join(workingdir, "mapping.sh"),
+                                {"mapping": file_mapping,
+                                "volume_name": TOW_VOLUME})
+
     build_cmd = ("docker run %s" % ("-v %s:/tow" % workingdir)).split(" ")
     build_cmd.extend(args[1:])
     try:
@@ -103,6 +109,10 @@ def build_docker(args):
     #  reconfiguration on run phase
     if "--tow-run" in args:
         (entrypoint, cmd) = dockerfile.find_entrypoint_or_cmd()
+        templates.process_template("mapping.sh.tmpl",
+                                   os.path.join(workingdir, "mapping.sh"),
+                                   {"mapping": file_mapping,
+                                    "volume_name": TOW_VOLUME})
         templates.process_template("tow.sh.tmpl",
                                    os.path.join(workingdir, "tow.sh"),
                                    {"entrypoint": entrypoint,

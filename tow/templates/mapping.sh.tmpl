@@ -1,0 +1,14 @@
+#!/bin/sh
+# This is tow run script which copy files from tow volume
+{% for file_mapping in mapping %}
+if [ -f "{{volume_name}}/{{file_mapping[0]}}" ]; then
+    dst_dir=`dirname {{file_mapping[1]}}`
+    if [ ! -d "$dst_dir" ]; then
+        mkdir -p "$dst_dir"
+    fi
+    cp "{{volume_name}}/{{file_mapping[0]}}" "{{file_mapping[1]}}"
+    {% if file_mapping|length > 2 %}
+    chmod {{file_mapping[2]}} {{file_mapping[1]}}
+    {% endif %}
+fi
+{% endfor %}
