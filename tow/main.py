@@ -45,7 +45,6 @@ def init_tow(env_args={}):
     # process templates
     for fm in file_mapping.mapping:
         src = fm[0]
-        dst = fm[1]
         src_template_path = os.path.join(templates_path, src)
         if os.path.exists(src_template_path):
             processed_template_path = os.path.join(workingdir, src)
@@ -54,7 +53,7 @@ def init_tow(env_args={}):
                 if os.path.exists(template_path_dir):
                     shutil.rmtree(template_path_dir, ignore_errors=True)
 
-                os.mkdirs(template_path_dir)
+                os.makedirs(template_path_dir)
             templates.process(os.path.dirname(src_template_path),
                               os.path.basename(src_template_path),
                               processed_template_path, attrs)
@@ -80,8 +79,8 @@ def run_docker(args):
 
     # Init mapping file
     templates.process_template("mapping.sh.tmpl",
-                                os.path.join(workingdir, "mapping.sh"),
-                                {"mapping": file_mapping,
+                               os.path.join(workingdir, "mapping.sh"),
+                               {"mapping": file_mapping,
                                 "volume_name": TOW_VOLUME})
 
     build_cmd = ("docker run %s" % ("-v %s:/tow" % workingdir)).split(" ")
