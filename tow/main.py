@@ -43,24 +43,24 @@ def init_tow(env_args={}):
     attrs = process_attrs(envs, attributes_path)
 
     # process templates
-    for fm in file_mapping.mapping:
+    for fm in file_mapping.mapping.get("templates", []):
         src = fm[0]
         src_template_path = os.path.join(templates_path, src)
         if os.path.exists(src_template_path):
             processed_template_path = os.path.join(workingdir, src)
             template_path_dir = os.path.dirname(processed_template_path)
-            if template_path_dir != workingdir:
-                if os.path.exists(template_path_dir):
-                    shutil.rmtree(template_path_dir, ignore_errors=True)
-
+            if not os.path.exists(template_path_dir):
                 os.makedirs(template_path_dir)
+
             templates.process(os.path.dirname(src_template_path),
                               os.path.basename(src_template_path),
                               processed_template_path, attrs)
 
-    copy_files(workingdir, files_path)
+    copy_files(workingdir, files_path, file_mapping)
 
-    handled_file_mapping = [fm for fm in file_mapping.mapping
+    # Transform dict with mapping to list of file tuples that exists in .tow dir
+    handled_file_mapping = [fm for fm_list in file_mapping.mapping.values()
+                            for fm in fm_list
                             if os.path.exists(os.path.join(workingdir, fm[0]))]
 
     return (handled_file_mapping, dockerfile, envs, attrs, workingdir)
