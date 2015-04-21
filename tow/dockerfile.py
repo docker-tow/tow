@@ -110,7 +110,7 @@ class Dockerfile(object):
             if dockerfile_line.startswith("FROM") or dockerfile_line.startswith("MAINTAINER"):
                 position = i
 
-        position = position + 1 if position + 1 < len(self.__dockerfile) else position
+        position = position + 1
         self.__dockerfile = self.__dockerfile[:position] + copy_block + self.__dockerfile[position:]
 
     def find_entrypoint_or_cmd(self):

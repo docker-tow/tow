@@ -29,24 +29,37 @@ class DockerfileTest(unittest.TestCase):
         d._Dockerfile__dockerfile = ["FROM ubuntu"]
         mapping = ("/tets1", "/test2")
         d.add_copy([mapping])
-        self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu", "COPY %s %s" % mapping])
+        print d._Dockerfile__dockerfile
+        self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu",
+                                                         "# TOW COPY BLOCK FROM MAPPING FILE START",
+                                                         "COPY %s %s" % mapping,
+                                                         "# TOW COPY BLOCK FROM MAPPING FILE END"])
 
-    def test_add_copy_before_entrypoint(self):
+    def test_add_copy_after_from(self):
         d = Dockerfile("Dockerfile")
         d._Dockerfile__dockerfile = ["FROM ubuntu", "ENTRYPOINT [/bin/sh]"]
         mapping = ("/tets1", "/test2")
         d.add_copy([mapping])
+        print d._Dockerfile__dockerfile
         self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu",
-                                                         "COPY %s %s" % mapping, "ENTRYPOINT [/bin/sh]"])
+                                                         "# TOW COPY BLOCK FROM MAPPING FILE START",
+                                                         "COPY %s %s" % mapping,
+                                                         "# TOW COPY BLOCK FROM MAPPING FILE END",
+                                                         "ENTRYPOINT [/bin/sh]"])
 
-    def test_add_copy_before_entrypoint_or_cmd(self):
+
+    def test_add_copy_after_maintainer(self):
         d = Dockerfile("Dockerfile")
-        d._Dockerfile__dockerfile = ["FROM ubuntu", "ENTRYPOINT [/bin/sh]", "CMD [/bin/sh]"]
+        d._Dockerfile__dockerfile = ["FROM ubuntu", "MAINTAINER test","ENTRYPOINT [/bin/sh]"]
         mapping = ("/tets1", "/test2")
         d.add_copy([mapping])
+        print d._Dockerfile__dockerfile
         self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu",
+                                                         "MAINTAINER test",
+                                                         "# TOW COPY BLOCK FROM MAPPING FILE START",
                                                          "COPY %s %s" % mapping,
-                                                         "ENTRYPOINT [/bin/sh]", "CMD [/bin/sh]"])
+                                                         "# TOW COPY BLOCK FROM MAPPING FILE END",
+                                                         "ENTRYPOINT [/bin/sh]"])
 
     def test_find_entrypoint_or_cmd(self):
         d = Dockerfile("Dockerfile")
