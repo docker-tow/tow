@@ -22,6 +22,10 @@ from utils import get_env_args
 from utils import TOW_VOLUME
 from utils import project_paths
 from datetime import date
+from argparse import ArgumentParser
+from commands.create import CreateCommand
+from commands.build import BuildCommand
+from commands.run import RunCommand
 
 
 def init_tow(env_args={}):
@@ -175,15 +179,30 @@ def main():
     """
     Main command-line execution loop
     """
-    args = sys.argv[1:]
-    if args:
-        action = args[0]
-        if action == "create":
-            create_project(args)
-        elif action == "build":
-            build_docker(args)
-        elif action == "run":
-            run_docker(args)
+    tow_parser = ArgumentParser(description="tow is configuration managment tool for docker containers")
+    tow_subparsers = tow_parser.add_subparsers(help="tow commands", dest="command")
+
+    commands = {}
+
+    create_command = CreateCommand()
+    create_command.add_parser(tow_subparsers)
+    commands["create"] = create_command
+
+    build_command = BuildCommand()
+    build_command.add_parser(tow_subparsers)
+    commands["build"] = build_command
+
+    run_command = RunCommand()
+    run_command.add_parser(tow_subparsers)
+    commands["run"] = run_command
+
+    if len(sys.argv) > 1:
+        (namespace, args) = tow_parser.parse_known_args()
+
+        if namespace.command not in commands:
+            tow_parser.print_help()
+        else:
+            commands[namespace.command].command(namespace, args)
     else:
-        usage()
+        tow_parser.print_help()
     sys.exit(0)
