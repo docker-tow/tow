@@ -32,7 +32,9 @@ Add record into `mapping.py` with local file specification and path to place fil
 
 ```python
 mapping = [
-    ("site-example.conf", "/etc/nginx/sites-available/site-example.conf")
+    "files":[
+        ("site-example.conf", "/etc/nginx/sites-available/site-example.conf")
+    ]
 ]
 ```
 
@@ -82,8 +84,12 @@ In this template we used `header` attribute to set title and header of our webpa
 
 ```python
 mapping = [
-    ("site-example.conf", "/etc/nginx/sites-available/site-example.conf"),
-    ("index.html.tmpl", "/var/www/html/index.html")
+    "files": [
+        ("site-example.conf", "/etc/nginx/sites-available/site-example.conf")
+    ],
+    "templates": [
+        ("index.html.tmpl", "/var/www/html/index.html")
+    ]
 ]
 
 ```
