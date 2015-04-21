@@ -81,11 +81,13 @@ def get_env_args(args):
     return envs
 
 
-def copy_files(workingdir, files_path):
-    for f in os.listdir(files_path):
-        src_path = os.path.join(files_path, f)
-        dst_path = os.path.join(workingdir, f)
-        if os.path.isfile(src_path):
-            shutil.copy2(src_path, dst_path)
-        else:
-            shutil.copytree(src_path, dst_path)
+def copy_files(workingdir, files_path, file_mapping):
+    for fm in file_mapping.mapping.get("files", []):
+        src = fm[0]
+        src_file_path = os.path.join(files_path, src)
+        if os.path.exists(src_file_path):
+            dst_file_path = os.path.join(workingdir, src)
+            file_path_dir = os.path.dirname(dst_file_path)
+            if not os.path.exists(file_path_dir):
+                os.makedirs(file_path_dir)
+            shutil.copy2(src_file_path, dst_file_path)

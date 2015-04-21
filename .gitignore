@@ -54,3 +54,10 @@ docs/_build/
 target/
 
 .vagrant
+
+**/*.pyc
+*.pyc
+*.swp
+*.swn
+*.swo
+*.swm
