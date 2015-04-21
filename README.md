@@ -1,11 +1,13 @@
-[![Stories in Ready](https://badge.waffle.io/alekseiko/tow.png?label=ready&title=Ready)](https://waffle.io/alekseiko/tow)
-[![Build Status](https://travis-ci.org/alekseiko/tow.svg)](https://travis-ci.org/alekseiko/tow)
-[![Coverage Status](https://coveralls.io/repos/alekseiko/tow/badge.svg)](https://coveralls.io/r/alekseiko/tow)
-[![Code Climate](https://codeclimate.com/github/alekseiko/tow/badges/gpa.svg)](https://codeclimate.com/github/alekseiko/tow)                
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alekseiko/tow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
 Tow - configuration management tool for Docker
 ==============================================
+
+[![Build Status](https://travis-ci.org/alekseiko/tow.svg)](https://travis-ci.org/alekseiko/tow)
+[![Coverage Status](https://coveralls.io/repos/alekseiko/tow/badge.svg)](https://coveralls.io/r/alekseiko/tow)
+[![Code Climate](https://codeclimate.com/github/alekseiko/tow/badges/gpa.svg)](https://codeclimate.com/github/alekseiko/tow)    
+
+[![Stories in Ready](https://badge.waffle.io/alekseiko/tow.png?label=ready&title=Ready)](https://waffle.io/alekseiko/tow)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alekseiko/tow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 
 ## Overview
 
@@ -18,6 +20,9 @@ Here how it works:
 ## Installation
 
 Latest stable release is always available on PyPi.
+
+[![PyPi version](https://pypip.in/v/tow/badge.png)](https://crate.io/packages/tow/)
+[![PyPi downloads](https://pypip.in/d/tow/badge.png)](https://crate.io/packages/tow/)
 
 ```
 pip install tow
@@ -66,9 +71,3 @@ Tow is licensed under the Apache License, Version 2.0. See LICENSE for full lice
 # limitations under the License.
 #
 ```
-
-
-
-
-
-
