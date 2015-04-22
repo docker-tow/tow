@@ -46,11 +46,7 @@ Commands:
     run [-e <parameter>][args] <image> - process configuration files overrides and start container
 ```
 
-Tow also provide a docker image for working on distros like [CoreOS](https://coreos.com)
-
-```
-$ docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace tow <parameters>
-```
+Tow also available in docker image. Checkout [Tow docker image documentation](https://github.com/yurinnick/tow-docker) for more information.
 
 ## License
 
