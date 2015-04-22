@@ -29,7 +29,6 @@ class DockerfileTest(unittest.TestCase):
         d._Dockerfile__dockerfile = ["FROM ubuntu"]
         mapping = ("/tets1", "/test2")
         d.add_copy([mapping])
-        print d._Dockerfile__dockerfile
         self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu",
                                                          "# TOW COPY BLOCK FROM MAPPING FILE START",
                                                          "COPY %s %s" % mapping,
@@ -40,7 +39,6 @@ class DockerfileTest(unittest.TestCase):
         d._Dockerfile__dockerfile = ["FROM ubuntu", "ENTRYPOINT [/bin/sh]"]
         mapping = ("/tets1", "/test2")
         d.add_copy([mapping])
-        print d._Dockerfile__dockerfile
         self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu",
                                                          "# TOW COPY BLOCK FROM MAPPING FILE START",
                                                          "COPY %s %s" % mapping,
@@ -53,7 +51,6 @@ class DockerfileTest(unittest.TestCase):
         d._Dockerfile__dockerfile = ["FROM ubuntu", "MAINTAINER test","ENTRYPOINT [/bin/sh]"]
         mapping = ("/tets1", "/test2")
         d.add_copy([mapping])
-        print d._Dockerfile__dockerfile
         self.assertListEqual(d._Dockerfile__dockerfile, ["FROM ubuntu",
                                                          "MAINTAINER test",
                                                          "# TOW COPY BLOCK FROM MAPPING FILE START",
