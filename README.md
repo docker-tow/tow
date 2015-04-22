@@ -3,6 +3,7 @@ Tow - configuration management tool for Docker
 
 [![Build Status](https://travis-ci.org/docker-tow/tow.svg)](https://travis-ci.org/docker-tow/tow)
 [![Coverage Status](https://coveralls.io/repos/docker-tow/tow/badge.svg)](https://coveralls.io/r/docker-tow/tow)
+[![Dependency Status](https://gemnasium.com/docker-tow/tow.svg)](https://gemnasium.com/docker-tow/tow)
 [![Code Climate](https://codeclimate.com/github/docker-tow/tow/badges/gpa.svg)](https://codeclimate.com/github/docker-tow/tow)    
 
 [![Stories in Ready](https://badge.waffle.io/docker-tow/tow.png?label=ready&title=Ready)](https://waffle.io/docker-tow/tow)
