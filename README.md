@@ -1,12 +1,12 @@
 Tow - configuration management tool for Docker
 ==============================================
 
-[![Build Status](https://travis-ci.org/alekseiko/tow.svg)](https://travis-ci.org/alekseiko/tow)
-[![Coverage Status](https://coveralls.io/repos/alekseiko/tow/badge.svg)](https://coveralls.io/r/alekseiko/tow)
-[![Code Climate](https://codeclimate.com/github/alekseiko/tow/badges/gpa.svg)](https://codeclimate.com/github/alekseiko/tow)    
+[![Build Status](https://travis-ci.org/docker-tow/tow.svg)](https://travis-ci.org/docker-tow/tow)
+[![Coverage Status](https://coveralls.io/repos/docker-tow/tow/badge.svg)](https://coveralls.io/r/docker-tow/tow)
+[![Code Climate](https://codeclimate.com/github/docker-tow/tow/badges/gpa.svg)](https://codeclimate.com/github/docker-tow/tow)    
 
-[![Stories in Ready](https://badge.waffle.io/alekseiko/tow.png?label=ready&title=Ready)](https://waffle.io/alekseiko/tow)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alekseiko/tow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Stories in Ready](https://badge.waffle.io/docker-tow/tow.png?label=ready&title=Ready)](https://waffle.io/docker-tow/tow)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/docker-tow/tow?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
 ## Overview
@@ -21,7 +21,7 @@ Here how it works:
 
 Latest stable release is always available on PyPi.
 
-[![PyPi version](https://pypip.in/v/tow/badge.png)](https://crate.io/packages/tow/)
+[![PyPI version](https://badge.fury.io/py/tow.svg)](http://badge.fury.io/py/tow)
 [![PyPi downloads](https://pypip.in/d/tow/badge.png)](https://crate.io/packages/tow/)
 
 ```
@@ -32,7 +32,7 @@ pip install tow
 
 Check out [Getting Started Guide](docs/introduction.md) to get more familiar with Tow.
 
-If you are looking real world example of Tow project checkout: [tow-nginx](https://github.com/yurinnick/tow-nginx) - an example Tow project set up Nginx in most simple configuration.
+If you are looking real world example of Tow project checkout: [tow-nginx](https://github.com/docker-tow/tow-nginx) - an example Tow project set up Nginx in most simple configuration.
 
 ## Usage
 
