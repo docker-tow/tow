@@ -2,7 +2,11 @@
 TODO: add comments
 """
 from command import Command
-from tow.utils import TOW_VOLUME
+from utils import init_tow
+from utils import get_env_args
+from tow import templates
+import subprocess
+from utils import TOW_VOLUME
 
 
 class RunCommand(Command):
@@ -14,5 +18,11 @@ class RunCommand(Command):
         return parser
 
     def command(self, namespace, args):
-        print "Run", namespace, args
-        print "Volume", TOW_VOLUME
+        env_args = get_env_args(args)
+        (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(env_args)
+
+        try:
+            subprocess.call(["docker", "run", "-v", "%s:%s" % (workingdir, TOW_VOLUME)] + args)
+        except OSError as e:
+            if e.errno == os.errno.ENOENT:
+                print "ERORR: Please install docker and run tow again"

@@ -1,5 +1,5 @@
 import unittest
-from tow.utils import get_env_args
+from tow.commands.utils import get_env_args
 import os
 
 

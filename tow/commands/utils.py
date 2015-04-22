@@ -3,6 +3,10 @@ TODO: add comments
 """
 import os
 import shutil
+from tow.modules import load_module
+from tow.dockerfile import Dockerfile
+from tow.attrs import process_attrs
+from tow import templates
 
 
 TOW_VOLUME = "/tow"
@@ -91,3 +95,51 @@ def copy_files(workingdir, files_path, file_mapping):
             if not os.path.exists(file_path_dir):
                 os.makedirs(file_path_dir)
             shutil.copy2(src_file_path, dst_file_path)
+
+
+def init_tow(env_args={}):
+    (current_dir, dockerfile_path,
+     mappingfile_path, templates_path,
+     files_path, attributes_path) = project_paths()
+
+    file_mapping = load_module({}, current_dir, "mapping")
+
+    workingdir = os.path.join(current_dir, ".tow")
+
+    prepare_workingdir(workingdir)
+
+    dockerfile = Dockerfile(dockerfile_path)
+
+    envs = dockerfile.envs()
+    # envs passed as params has more priority then Dockerfile envs
+    envs.update(env_args)
+    attrs = process_attrs(envs, attributes_path)
+
+    # process templates
+    for fm in file_mapping.mapping.get("templates", []):
+        src = fm[0]
+        src_template_path = os.path.join(templates_path, src)
+        if os.path.exists(src_template_path):
+            processed_template_path = os.path.join(workingdir, src)
+            template_path_dir = os.path.dirname(processed_template_path)
+            if not os.path.exists(template_path_dir):
+                os.makedirs(template_path_dir)
+
+            templates.process(os.path.dirname(src_template_path),
+                              os.path.basename(src_template_path),
+                              processed_template_path, attrs)
+
+    copy_files(workingdir, files_path, file_mapping)
+
+    # Transform dict with mapping to list of file tuples that exists in .tow dir
+    handled_file_mapping = [fm for fm_list in file_mapping.mapping.values()
+                            for fm in fm_list
+                            if os.path.exists(os.path.join(workingdir, fm[0]))]
+
+    # Init mapping file
+    templates.process_template("mapping.sh.tmpl",
+                            os.path.join(workingdir, "mapping.sh"),
+                            {"mapping": handled_file_mapping,
+                                "volume_name": TOW_VOLUME})
+
+    return (handled_file_mapping, dockerfile, envs, attrs, workingdir)
