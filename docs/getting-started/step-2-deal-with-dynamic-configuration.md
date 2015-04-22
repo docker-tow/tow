@@ -189,8 +189,3 @@ And we've got a webpage with new content set in CONTENT env variable on `tow run
 If you want to get deep understanding of how `tow build` and `tow run` works checkout the next step.
 
 ### [Next: 3. Understanding Build and Run Commands](#)
-
-
-
-
-
