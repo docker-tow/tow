@@ -9,6 +9,7 @@ The other callables defined in this module are internal only.
 """
 
 import sys
+from version import version
 from argparse import ArgumentParser
 from commands.create import CreateCommand
 from commands.build import BuildCommand
@@ -19,7 +20,7 @@ def main():
     """
     Main command-line execution loop
     """
-    tow_parser = ArgumentParser(description="tow is configuration managment tool for docker containers")
+    tow_parser = ArgumentParser(description="tow is configuration managment tool for docker containers", version = version)
     tow_subparsers = tow_parser.add_subparsers(help="tow commands", dest="command")
 
     commands = {}
@@ -40,7 +41,7 @@ def main():
         (namespace, args) = tow_parser.parse_known_args()
 
         if namespace.command not in commands:
-            tow_parser.print_help()
+                tow_parser.print_help()
         else:
             commands[namespace.command].command(namespace, args)
     else:
