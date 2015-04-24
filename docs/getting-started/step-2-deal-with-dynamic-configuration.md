@@ -31,11 +31,12 @@ server {
 Add record into `mapping.py` with local file specification and path to place file inside the container. Open `mapping.py` with your favorite text editor and update it this way.
 
 ```python
-mapping = [
+mapping = {
+    "templates": []
     "files":[
         ("site-example.conf", "/etc/nginx/sites-available/site-example.conf")
     ]
-]
+}
 ```
 
 Let's build container and check how it works.
@@ -83,15 +84,14 @@ Now let's go and create simple webpage template. Create `templates/index.html.tm
 In this template we used `header` attribute to set title and header of our webpage. To pass this template inside container add it to `mapping.py` as we did it for static files. By default Nginx uses `/var/www/html` to store site content, so modify `mapping.py` this way:
 
 ```python
-mapping = [
-    "files": [
-        ("site-example.conf", "/etc/nginx/sites-available/site-example.conf")
-    ],
+mapping = {
     "templates": [
         ("index.html.tmpl", "/var/www/html/index.html")
+    ],
+    "files": [
+        ("site-example.conf", "/etc/nginx/sites-available/site-example.conf")
     ]
-]
-
+}
 ```
 
 Attributes and templates provide simple, but powerful way to store configuration variables and configuration files templates structured and separately.
