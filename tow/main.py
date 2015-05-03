@@ -15,12 +15,15 @@ from commands.create import CreateCommand
 from commands.build import BuildCommand
 from commands.run import RunCommand
 
+# don't create pyc files
+sys.dont_write_bytecode = True
+
 
 def main():
     """
     Main command-line execution loop
     """
-    tow_parser = ArgumentParser(description="tow is configuration managment tool for docker containers", version = version)
+    tow_parser = ArgumentParser(description="tow is configuration managment tool for docker containers", version=version)
     tow_subparsers = tow_parser.add_subparsers(help="tow commands", dest="command")
 
     commands = {}

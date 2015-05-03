@@ -17,19 +17,21 @@ class BuildCommand(Command):
                                        help="process attributes and tamplates path Dockerfile according mapping and run docker build with DOCKER-OPTIONS")
         parser.add_argument("--tow-run", action="store_true",
                             help="patch docker file in order to use configuration in run phase")
+        parser.add_argument("--tow-attrs", type=str, default="default",
+                            help="specify name of attribute file in attributes folder. Default value: default. Example --tow-attrs prod")
 
     def command(self, namespace, args):
         """
             This is build command. Prepare workingdir(.tow) and run docker build
         """
-        (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow()
+        (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(attributes_name=namespace.tow_attrs)
         #  Check if you would like to patch Dockerfile in order to use
         #  reconfiguration on run phase
         if namespace.tow_run:
             (entrypoint, cmd) = dockerfile.find_entrypoint_or_cmd()
             templates.process_template("tow.sh.tmpl",
-                                    os.path.join(workingdir, "tow.sh"),
-                                    {"entrypoint": entrypoint,
+                                       os.path.join(workingdir, "tow.sh"),
+                                       {"entrypoint": entrypoint,
                                         "cmd": cmd, "mapping": file_mapping,
                                         "volume_name": TOW_VOLUME})
             file_mapping.append(("tow.sh", "/tow.sh"))
