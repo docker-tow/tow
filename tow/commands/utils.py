@@ -89,8 +89,8 @@ def get_env_args(args):
     return envs
 
 
-def copy_files(workingdir, files_path, file_mapping):
-    for fm in file_mapping.mapping.get("files", []):
+def copy_files(workingdir, files_path, mapping):
+    for fm in mapping.get("files", []):
         src = fm[0]
         src_file_path = os.path.join(files_path, src)
         if os.path.exists(src_file_path):
@@ -103,12 +103,13 @@ def copy_files(workingdir, files_path, file_mapping):
             print "file %s doesn't exists" % src_file_path
 
 
-def init_tow(env_args={}, attributes_name="default"):
+def init_tow(env_args={}, attributes_name="default", mapping_name="mapping"):
     (current_dir, dockerfile_path,
      mappingfile_path, templates_path,
      files_path, attributes_path) = project_paths()
 
     file_mapping = load_module({}, current_dir, "mapping")
+    mapping = getattr(file_mapping, mapping_name, {})
 
     workingdir = os.path.join(current_dir, ".tow")
 
@@ -122,7 +123,7 @@ def init_tow(env_args={}, attributes_name="default"):
     attrs = process_attrs(envs, attributes_path, attributes_name)
 
     # process templates
-    for fm in file_mapping.mapping.get("templates", []):
+    for fm in mapping.get("templates", []):
         src = fm[0]
         src_template_path = os.path.join(templates_path, src)
         if os.path.exists(src_template_path):
@@ -137,10 +138,10 @@ def init_tow(env_args={}, attributes_name="default"):
         else:
             print "WARN: template file %s doesn't exists" % src_template_path
 
-    copy_files(workingdir, files_path, file_mapping)
+    copy_files(workingdir, files_path, mapping)
 
     # Transform dict with mapping to list of file tuples that exists in .tow dir
-    handled_file_mapping = [fm for fm_list in file_mapping.mapping.values()
+    handled_file_mapping = [fm for fm_list in mapping.values()
                             for fm in fm_list
                             if os.path.exists(os.path.join(workingdir, fm[0]))]
 

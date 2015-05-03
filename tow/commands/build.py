@@ -19,12 +19,15 @@ class BuildCommand(Command):
                             help="patch docker file in order to use configuration in run phase")
         parser.add_argument("--tow-attrs", type=str, default="default",
                             help="specify name of attribute file in attributes folder. Default value: default. Example --tow-attrs prod")
+        parser.add_argument("--tow-mapping", type=str, default="mapping",
+                            help="specify name of mapping variable in mapping.py. Default value:mapping. Example --tow-mapping prod")
 
     def command(self, namespace, args):
         """
             This is build command. Prepare workingdir(.tow) and run docker build
         """
-        (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(attributes_name=namespace.tow_attrs)
+        (file_mapping, dockerfile, envs, attrs, workingdir) = init_tow(attributes_name=namespace.tow_attrs,
+                                                                       mapping_name=namespace.tow_mapping)
         #  Check if you would like to patch Dockerfile in order to use
         #  reconfiguration on run phase
         if namespace.tow_run:
