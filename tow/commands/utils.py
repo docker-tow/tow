@@ -7,6 +7,10 @@ from tow.modules import load_module
 from tow.dockerfile import Dockerfile
 from tow.attrs import process_attrs
 from tow import templates
+import subprocess
+import sys
+import json
+import collections
 
 
 TOW_VOLUME = "/tow"
@@ -97,7 +101,7 @@ def copy_files(workingdir, files_path, file_mapping):
             shutil.copy2(src_file_path, dst_file_path)
 
 
-def init_tow(env_args={}):
+def init_tow(env_args={}, attributes_name="default"):
     (current_dir, dockerfile_path,
      mappingfile_path, templates_path,
      files_path, attributes_path) = project_paths()
@@ -113,7 +117,7 @@ def init_tow(env_args={}):
     envs = dockerfile.envs()
     # envs passed as params has more priority then Dockerfile envs
     envs.update(env_args)
-    attrs = process_attrs(envs, attributes_path)
+    attrs = process_attrs(envs, attributes_path, attributes_name)
 
     # process templates
     for fm in file_mapping.mapping.get("templates", []):
@@ -138,8 +142,52 @@ def init_tow(env_args={}):
 
     # Init mapping file
     templates.process_template("mapping.sh.tmpl",
-                            os.path.join(workingdir, "mapping.sh"),
-                            {"mapping": handled_file_mapping,
+                               os.path.join(workingdir, "mapping.sh"),
+                               {"mapping": handled_file_mapping,
                                 "volume_name": TOW_VOLUME})
 
     return (handled_file_mapping, dockerfile, envs, attrs, workingdir)
+
+
+def get_linked_container_variables(args):
+    envs = {}
+    if "--link" in args:
+        link_idx = args.index("--link")
+        link_idx = link_idx + 1
+        link_info = args[link_idx]
+        (name, alias) = link_info.split(":")
+        current_name_idx = args.index("--name")
+        current_name_idx = current_name_idx + 1
+        current_name = args[current_name_idx]
+
+        p = subprocess.Popen(["docker", "inspect", name],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if err:
+            print "ERROR: Problem to make docker inspect for %s, %s" % (name, err)
+            sys.exit(1)
+        linked_info = json.loads(out.strip(), object_pairs_hook=collections.OrderedDict)
+        exposed_ports = [port for port in linked_info[0]["Config"]["ExposedPorts"].keys()]
+        linked_envs = [env for env in linked_info[0]["Config"]["Env"]
+                       if not (env.startswith("HOME") or env.startswith("PATH"))]
+        ip_address = linked_info[0]["NetworkSettings"]["IPAddress"]
+        envs["%s_NAME" % alias.upper()] = "/%s/%s" % (current_name, alias)
+        if exposed_ports:
+            firts_port, first_proto = exposed_ports[0].split("/")
+            envs["%s_PORT" % alias.upper()] = "%s://%s:%s" % (first_proto,
+                                                              ip_address,
+                                                              firts_port)
+            for exposed_port in exposed_ports:
+                port, proto = exposed_port.split("/")
+                envs["%s_PORT_%s_%s" % (alias.upper(), port, proto.upper())] = "%s://%s:%s" % (proto,
+                                                                                               ip_address,
+                                                                                               port)
+                envs["%s_PORT_%s_%s_PROTO" % (alias.upper(), port, proto.upper())] = proto
+                envs["%s_PORT_%s_%s_PORT" % (alias.upper(), port, proto.upper())] = port
+                envs["%s_PORT_%s_%s_ADDR" % (alias.upper(), port, proto.upper())] = ip_address
+
+        if linked_envs:
+            for linked_env in linked_envs:
+                linked_env_name, linked_env_value = linked_env.split("=")
+                envs["%s_ENV_%s" % (alias.upper(), linked_env_name)] = linked_env_value
+    return envs
