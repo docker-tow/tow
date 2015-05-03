@@ -99,6 +99,8 @@ def copy_files(workingdir, files_path, file_mapping):
             if not os.path.exists(file_path_dir):
                 os.makedirs(file_path_dir)
             shutil.copy2(src_file_path, dst_file_path)
+        else:
+            print "file %s doesn't exists" % src_file_path
 
 
 def init_tow(env_args={}, attributes_name="default"):
@@ -132,6 +134,8 @@ def init_tow(env_args={}, attributes_name="default"):
             templates.process(os.path.dirname(src_template_path),
                               os.path.basename(src_template_path),
                               processed_template_path, attrs)
+        else:
+            print "WARN: template file %s doesn't exists" % src_template_path
 
     copy_files(workingdir, files_path, file_mapping)
 
