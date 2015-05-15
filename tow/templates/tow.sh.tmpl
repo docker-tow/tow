@@ -6,7 +6,11 @@ if [ -f "{{volume_name}}/mapping.sh" ]; then
 fi
 
 {% if entrypoint %}
+{% if cmd %}
 command="{{entrypoint}} {{cmd}} $*"
+{% else %}
+command="{{entrypoint}} $*"
+{% endif %}
 {% else %}
 command="{{cmd}}"
 {% endif %}
