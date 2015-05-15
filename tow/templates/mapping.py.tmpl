@@ -7,6 +7,11 @@
 # All rights reserved - Do Not Redistribute
 #
 
-mapping = [
-    ("/path/to/template", "/path/in/container")
-]
+mapping = {
+    "templates": [
+        ("/path/to/template", "/path/in/container")
+    ],
+    "files": [
+        ("/path/to/file", "/path/in/container")
+    ]
+}
