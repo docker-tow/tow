@@ -37,7 +37,7 @@ class BuildCommand(Command):
                                        {"entrypoint": entrypoint,
                                         "cmd": cmd, "mapping": file_mapping,
                                         "volume_name": TOW_VOLUME})
-            file_mapping.append(("tow.sh", "/tow.sh"))
+            file_mapping.append(("tow.sh", "/tow.sh", 755))
             dockerfile.replace_entrypoint_or_cmd_by_tow_cmd("sh /tow.sh")
         dockerfile.add_copy(file_mapping)
         dockerfile.save(os.path.join(workingdir, "Dockerfile"))
