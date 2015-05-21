@@ -5,17 +5,14 @@ if [ -f "{{volume_name}}/mapping.sh" ]; then
     sh {{volume_name}}/mapping.sh
 fi
 
-{% if entrypoint %}
-command="{{entrypoint}}"
-{% else %}
-command="{{cmd}}"
-{% endif %}
-
 PATH=$PATH:`pwd`
 
-# execute entire command
-{% if entrypoint and cmd %}
-"$command" "{{cmd}}"
+{% if entrypoint %}
+{% if cmd %}
+"{{entrypoint}}" "{{cmd}}" "$@"
 {% else %}
-"$command"
+"{{entrypoint}}" "$@"
+{% endif %}
+{% else %}
+"{{cmd}}"
 {% endif %}
