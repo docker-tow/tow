@@ -14,6 +14,7 @@ from argparse import ArgumentParser
 from commands.create import CreateCommand
 from commands.build import BuildCommand
 from commands.run import RunCommand
+from commands.process import ProcessCommand
 
 # don't create pyc files
 sys.dont_write_bytecode = True
@@ -39,6 +40,10 @@ def main():
     run_command = RunCommand()
     run_command.add_parser(tow_subparsers)
     commands["run"] = run_command
+
+    process_command = ProcessCommand()
+    process_command.add_parser(tow_subparsers)
+    commands["process"] = process_command
 
     if len(sys.argv) > 1:
         (namespace, args) = tow_parser.parse_known_args()
