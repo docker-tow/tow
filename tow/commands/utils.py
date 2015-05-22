@@ -117,7 +117,9 @@ def init_tow(env_args={}, attributes_name="default", mapping_name="mapping"):
 
     dockerfile = Dockerfile(dockerfile_path)
 
-    envs = dockerfile.envs()
+    # TODO: print warn into logs that you try to read env but it is not defined
+    envs = collections.defaultdict(lambda: "")
+    envs.update(dockerfile.envs())
     # envs passed as params has more priority then Dockerfile envs
     envs.update(env_args)
     attrs = process_attrs(envs, attributes_path, attributes_name)
