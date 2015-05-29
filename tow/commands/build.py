@@ -31,11 +31,17 @@ class BuildCommand(Command):
         #  Check if you would like to patch Dockerfile in order to use
         #  reconfiguration on run phase
         if namespace.tow_run:
+            command = []
             (entrypoint, cmd) = dockerfile.find_entrypoint_or_cmd()
+            if cmd:
+                command += cmd
+            if entrypoint:
+                command = entrypoint + command
+                command.append("$@")
             templates.process_template("tow.sh.tmpl",
                                        os.path.join(workingdir, "tow.sh"),
-                                       {"entrypoint": entrypoint,
-                                        "cmd": cmd, "mapping": file_mapping,
+                                       {"command": command,
+                                        "mapping": file_mapping,
                                         "volume_name": TOW_VOLUME})
             file_mapping.append(("tow.sh", "/tow.sh", 755))
             dockerfile.replace_entrypoint_or_cmd_by_tow_cmd("sh /tow.sh")

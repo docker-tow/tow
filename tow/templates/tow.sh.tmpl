@@ -7,12 +7,4 @@ fi
 
 PATH=$PATH:`pwd`
 
-{% if entrypoint %}
-{% if cmd %}
-"{{entrypoint}}" "{{cmd}}" "$@"
-{% else %}
-"{{entrypoint}}" "$@"
-{% endif %}
-{% else %}
-"{{cmd}}"
-{% endif %}
+{% for cmd in command -%}"{{ cmd }}" {% endfor %}

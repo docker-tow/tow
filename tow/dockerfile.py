@@ -60,9 +60,9 @@ class Dockerfile(object):
             # Handle array command
             if command.startswith("[") and command.endswith("]"):
                 command = command[1:-1]
-                return " ".join([sh.strip()[1:-1] for sh in command.split(",")])
+                return [sh.strip()[1:-1] for sh in command.split(",")]
             else:  # It's just shell notation
-                return command.strip()
+                return [command.strip()]
         return None
 
     def envs(self):
