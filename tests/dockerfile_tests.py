@@ -61,22 +61,22 @@ class DockerfileTest(unittest.TestCase):
     def test_find_entrypoint_or_cmd(self):
         d = Dockerfile("Dockerfile")
         d._Dockerfile__dockerfile = ['FROM ubuntu', 'ENTRYPOINT ["/bin/sh"]', 'CMD ["-c"]']
-        self.assertEqual(d.find_entrypoint_or_cmd(), ("/bin/sh", "-c"))
+        self.assertEqual(d.find_entrypoint_or_cmd(), (["/bin/sh"], ["-c"]))
 
     def test_find_entrypoint_or_cmd_shell_style(self):
         d = Dockerfile("Dockerfile")
         d._Dockerfile__dockerfile = ['FROM ubuntu', 'ENTRYPOINT /bin/sh', 'CMD ["-c"]']
-        self.assertEqual(d.find_entrypoint_or_cmd(), ("/bin/sh", "-c"))
+        self.assertEqual(d.find_entrypoint_or_cmd(), (["/bin/sh"], ["-c"]))
 
     def test_find_entrypoint_or_cmd_cmd_only(self):
         d = Dockerfile("Dockerfile")
         d._Dockerfile__dockerfile = ['FROM ubuntu', 'CMD ["/bin/sh", "-c", "-x"]']
-        self.assertEqual(d.find_entrypoint_or_cmd(), (None, "/bin/sh -c -x"))
+        self.assertEqual(d.find_entrypoint_or_cmd(), (None, ["/bin/sh", "-c", "-x"]))
 
     def test_find_entrypoint_or_cmd_entrypoint_only(self):
         d = Dockerfile("Dockerfile")
         d._Dockerfile__dockerfile = ['FROM ubuntu', 'ENTRYPOINT ["/bin/sh"]']
-        self.assertEqual(d.find_entrypoint_or_cmd(), ("/bin/sh", None))
+        self.assertEqual(d.find_entrypoint_or_cmd(), (["/bin/sh"], None))
 
     def test_find_entrypoint_or_cmd_none(self):
         d = Dockerfile("Dockerfile")
