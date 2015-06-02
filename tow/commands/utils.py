@@ -189,7 +189,8 @@ def get_link_envs(name, alias, current_name):
 
     if linked_envs:
         for linked_env in linked_envs:
-            linked_env_name, linked_env_value = linked_env.split("=")
+            linked_env_name = linked_env.split("=")[0]
+            linked_env_value = linked_env[len(linked_env_name + "="):]
             envs["%s_ENV_%s" % (alias.upper(), linked_env_name)] = linked_env_value
     return envs
 
